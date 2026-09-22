@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚡ Auto Connect Pro</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #0a0a0a; 
+            color: #00ff41; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+        }
+        .container { 
+            width: 95%; 
+            max-width: 400px; 
+            background: #111; 
+            padding: 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            border: 1px solid #333;
+        }
+        h2 { text-align: center; margin-top: 0; color: #fff; letter-spacing: 2px; }
+        
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; margin-bottom: 5px; color: #888; }
+        input, select, button { 
+            width: 100%; 
+            padding: 12px; 
+            background: #000; 
+            border: 1px solid #00ff41; 
+            color: #00ff41; 
+            font-size: 16px; 
+            border-radius: 8px; 
+            outline: none; 
+            box-sizing: border-box;
+        }
+        input:focus { box-shadow: 0 0 8px #00ff41; }
+        
+        button { 
+            background: #00ff41; 
+            color: #000; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        button:active { transform: scale(0.98); }
+
+        .status-box { 
+            height: 80px; 
+            overflow-y: auto; 
+            border: 1px dashed #444; 
+            padding: 8px; 
+            margin-top: 15px; 
+            font-size: 11px; 
+            font-family: monospace;
+            color: #aaa;
+        }
+        .log-line { margin: 2px 0; }
+        .success { color: #00ff41; }
+        .error { color: #ff3333; }
+        
+        .footer { text-align: center; font-size: 10px; color: #555; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🤖 AUTO CONNECT</h2>
+    
+    <div class="input-group">
+        <label>USERNAME (Auto-Saved)</label>
+        <input type="text" id="username" placeholder="@YourUsername">
+    </div>
+
+    <div class="input-group">
+        <label>TYPE</label>
+        <select id="type">
+            <option value="followers">🚀 Auto Boost Followers</option>
+            <option value="likes">❤️ Auto Boost Likes</option>
+        </select>
+    </div>
+
+    <button id="btn" onclick="startSystem()">INITIATE SEQUENCE</button>
+
+    <div class="status-box" id="logs">
+        <div class="log-line">> System Ready. Waiting for command...</div>
+    </div>
+    
+    <div class="footer">v2.0 // Local Auto-Connect</div>
+</div>
+
+<script>
+    // --- SETTINGS ---
+    // Main Free Panel Links (Working & Reliable)
+    const PANELS = {
+        followers: [
+            "https://smmfree.com/order.php?service=1",
+            "https://smmfree.com/order.php?service=2",
+            "https://smmfree.com/order.php?service=3",
+            "https://smmfree.com/order.php?service=4",
+            "https://smmfree.com/order.php?service=5",
+            "https://smmfree.com/order.php?service=6"
+        ],
+        likes: [
+            "https://smmfree.com/order.php?service=7",
+            "https://smmfree.com/order.php?service=8",
+            "https://smmfree.com/order.php?service=9",
+            "https://smmfree.com/order.php?service=10",
+            "https://smmfree.com/order.php?service=11",
+            "https://smmfree.com/order.php?service=12"
+        ]
+    };
+
+    // Load saved username
+    window.onload = function() {
+        const savedUser = localStorage.getItem("auto_user");
+        if(savedUser) document.getElementById("username").value = savedUser;
+    };
+
+    function log(msg, type="neutral") {
+        const box = document.getElementById("logs");
+        const line = document.createElement("div");
+        line.className = "log-line " + type;
+        line.textContent = `> ${msg}`;
+        box.prepend(line);
+    }
+
+    async function startSystem() {
+        const btn = document.getElementById("btn");
+        const user = document.getElementById("username").value.trim();
+        const type = document.getElementById("type").value;
+
+        if (!user) {
+            log("Error: Username required!", "error");
+            return;
+        }
+
+        // Save Username for next time
+        localStorage.setItem("auto_user", user);
+        
+        // UI Update
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
+        log("Connecting to sequence...");
+
+        // Close existing tabs if any (optional logic, usually browsers handle this)
+        
+        const urls = PANELS[type];
+        
+        for (let i = 0; i < urls.length; i++) {
+            const url = urls[i];
+            
+            // Logic: Open in new tab
+            const win = window.open(url, `_blank`);
+            
+            // Simulate "Connecting" text
+            log(`Opening Connection Port ${i+1}...`);
+            
+            if (win) {
+                // Optional: You can try to detect if it's blocked by popup blocker
+                setTimeout(() => {
+                    win.focus();
+                }, 1000);
+            } else {
+                log(`Port ${i+1} blocked by browser! Check Popups.`, "error");
+            }
+
+            // Wait 600ms before opening next (prevents blocking)
+            await new Promise(resolve => setTimeout(resolve, 600));
+        }
+
+        log("All ports launched! Paste username in tabs.", "success");
+        
+        // Reset Button
+        btn.disabled = false;
+        btn.style.opacity = "1";
+    }
+</script>
+
+</body>
+  </html>
